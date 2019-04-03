@@ -1,0 +1,67 @@
+{\rtf1\ansi\ansicpg1251\cocoartf1504
+{\fonttbl\f0\fnil\fcharset0 HelveticaNeue;}
+{\colortbl;\red255\green255\blue255;\red255\green255\blue255;\red0\green0\blue0;\red255\green255\blue255;
+}
+{\*\expandedcolortbl;\csgray\c100000;\cssrgb\c100000\c100000\c100000;\cssrgb\c0\c0\c0;\csgray\c100000;
+}
+\paperw11900\paperh16840\margl1440\margr1440\vieww10800\viewh8400\viewkind0
+\deftab720
+\pard\pardeftab720\li80\fi-80\ri460\sa80\partightenfactor0
+
+\f0\fs26 \cf0 \cb2 \expnd0\expndtw0\kerning0
+1.\cb4 \uc0\u8232 \cb2 declare\cb4 \uc0\u8232 \cb2 cursor five is\cb4 \uc0\u8232 \cb2 select dep_name from employees;\cb4 \uc0\u8232 \cb2 name employees.dep_name%type;\cb4 \uc0\u8232 \cb2 begin\cb4 \uc0\u8232 \cb2 open five;\cb4 \uc0\u8232 \cb2 loop\cb4 \uc0\u8232 \cb2 fetch five into name;\cb4 \uc0\u8232 \cb2 exit when (five%rowcount > 5) or\cb4 \uc0\u8232 \cb2 (five%notfound);\cb4 \uc0\u8232 \cb2 dbms_output.put_line('Dep name' || name);\cb4 \uc0\u8232 \cb2 end loop;\cb4 \uc0\u8232 \cb2 close five;\cb4 \uc0\u8232 \cb2 end;\
+\cb4 \uc0\u8232 \cb2 2.\cb4 \uc0\u8232 \cb2 declare\cb4 \uc0\u8232 \cb2 cursor c1 (dep_id number) is select first_name, salary from employees where dep_id = dep_id;\cb4 \uc0\u8232 \cb2 dep_num number;\cb4 \uc0\u8232 \cb2 dep_nm varchar(20);\cb4 \uc0\u8232 \cb2 emp_nm varchar(20);\cb4 \uc0\u8232 \cb2 emp_sal number;\cb4 \uc0\u8232 \cb2 begin\cb4 \uc0\u8232 \cb2 dep_num := 1;\cb4 \uc0\u8232 \cb2 open c1(dep_num);\cb4 \uc0\u8232 \cb2 select dep_name into dep_nm from department where dep_id = dep_num;\cb4 \uc0\u8232 \cb2 dbms_output.put_line(dep_num || ': ' || dep_nm);\cb4 \uc0\u8232 \cb2 loop\cb4 \uc0\u8232 \cb2 fetch c1 into emp_nm, emp_sal;\cb4 \uc0\u8232 \cb2 exit when c1%notfound;\cb4 \uc0\u8232 \cb2 dbms_output.put_line(' ' || 'name: ' || emp_nm || '; salary: ' || emp_sal);\cb4 \uc0\u8232 \cb2 end loop;\cb4 \uc0\u8232 \cb2 close c1;\cb4 \uc0\u8232 \cb2 end;\
+\cb4 \uc0\u8232 \cb2 3. \cb4 \uc0\u8232 \cb2 declare\cb4 \uc0\u8232 \cb2 cursor sal_cursor is\cb4 \uc0\u8232 \cb2 select salary from employees for update nowait;\cb4 \uc0\u8232 \cb2 begin\cb4 \uc0\u8232 \cb2 for emp_record in sal_cursor loop\cb4 \uc0\u8232 \cb2 update employees\cb4 \uc0\u8232 \cb2 set salary=emp_record.salary*1.10\cb4 \uc0\u8232 \cb2 where current of sal_cursor;\cb4 \uc0\u8232 \cb2 end loop;\cb4 \uc0\u8232 \cb2 end;\
+\cb4 \uc0\u8232 \cb2 4. \cb4 \uc0\u8232 \cb2 declare\cb4 \uc0\u8232 \cb2 cursor dep_change is\cb4 \uc0\u8232 \cb2 select dep_name from employees where first_name ='Bob' for update nowait;\cb4 \uc0\u8232 \cb2 begin\cb4 \uc0\u8232 \cb2 for emp_record in dep_change loop\cb4 \uc0\u8232 \cb2 update employees\cb4 \uc0\u8232 \cb2 set dep_name='Eng'\cb4 \uc0\u8232 \cb2 where current of dep_change;\cb4 \uc0\u8232 \cb2 end loop;\cb4 \uc0\u8232 \cb2 end;\
+\cb4 \uc0\u8232 \cb2 5. \cb4 \uc0\u8232 \cb2 DECLARE\cb4 \uc0\u8232 \cb2 TYPE my_RefCur IS REF CURSOR RETURN employees%ROWTYPE;\cb4 \uc0\u8232 \cb2 cur_var my_RefCur;\cb4 \uc0\u8232 \cb2 rec_var employees%ROWTYPE;\cb4 \uc0\u8232 \cb2 BEGIN\cb4 \uc0\u8232 \cb2 OPEN cur_var FOR SELECT * FROM employees WHERE dep_id = 1;\cb4 \uc0\u8232 \cb2 FETCH cur_var INTO rec_var;\cb4 \uc0\u8232 \cb2 CLOSE cur_var;\cb4 \uc0\u8232 \cb2 DBMS_OUTPUT.PUT_LINE ('Employee '||rec_var.first_name ||' '||'which id is '||rec_var.emp_id ||' '||' has salary '||rec_var.salary||'.');\cb4 \uc0\u8232 \cb2 END;\
+\cb4 \uc0\u8232 \cb2 6.\cb4 \uc0\u8232 \cb2 DECLARE\cb4 \uc0\u8232 \cb2 TYPE my_rec IS RECORD (\cb4 \uc0\u8232 \cb2 emp_sal employees.salary%TYPE,\cb4 \uc0\u8232 \cb2 emp_name employees.first_name%type);\cb4 \uc0\u8232 \cb2 TYPE RefCur IS REF CURSOR RETURN my_rec;\cb4 \uc0\u8232 \cb2 cur_var REFCUR; \cb4 \uc0\u8232 \cb2 at_salary employees.salary%TYPE;\cb4 \uc0\u8232 \cb2 at_name employees.first_name%TYPE;\cb4 \uc0\u8232 \cb2 BEGIN\cb4 \uc0\u8232 \cb2 OPEN cur_var FOR SELECT salary,first_name FROM employees WHERE emp_id = 500;\cb4 \uc0\u8232 \cb2 FETCH cur_var INTO at_salary,at_name;\cb4 \uc0\u8232 \cb2 CLOSE cur_var;\cb4 \uc0\u8232 \cb2 DBMS_OUTPUT.PUT_LINE ('Salary of the employee which name is '||at_name || ' '|| '= '||at_salary);\cb4 \uc0\u8232 \cb2 END;\
+\cb4 \uc0\u8232 \cb2 7. \cb4 \uc0\u8232 \cb2 DECLARE\cb4 \uc0\u8232 \cb2 TYPE wk_RefCur IS REF CURSOR;\cb4 \uc0\u8232 \cb2 cur_var wk_RefCur;\cb4 \uc0\u8232 \cb2 f_name employees.first_name%TYPE;\cb4 \uc0\u8232 \cb2 emp_sal employees.salary%TYPE;\cb4 \uc0\u8232 \cb2 BEGIN\cb4 \uc0\u8232 \cb2 OPEN cur_var FOR SELECT first_name, Salary FROM employees WHERE emp_id = 100;\cb4 \uc0\u8232 \cb2 FETCH cur_var INTO f_name, emp_sal;\cb4 \uc0\u8232 \cb2 CLOSE cur_var;\cb4 \uc0\u8232 \cb2 DBMS_OUTPUT.PUT_LINE (f_name ||' '||emp_sal);\cb4 \uc0\u8232 \cb2 END;\
+\cb4 \uc0\u8232 \cb2 8.\
+\pard\pardeftab720\partightenfactor0
+\cf0 Create or replace type varchar_number as object (emp_id number,emp_name vaarchar(20),salary number); \uc0\u1089 \u1085 \u1072 \u1095 \u1072 \u1083 \u1086  \u1101 \u1090 \u1086  \u1079 \u1072 \u1087 \u1091 \u1089 \u1082 \u1072 \u1077 \u1096 \u1100  \
+Create or replace type t_varchar_number as table of varchar_number; \uc0\u1072  \u1087 \u1086 \u1090 \u1086 \u1084  \u1101 \u1090 \u1086 \
+\
+\pard\pardeftab720\li80\fi-80\ri460\sa80\partightenfactor0
+\cf0 Create type varchar_number as object ()\cb4 \uc0\u8232 \cb2 create or replace function exam\cb4 \uc0\u8232 \cb2 return t_varchar_number as ret t_varchar_number;\cb4 \uc0\u8232 \cb2 begin\cb4 \uc0\u8232 \cb2 execute immediate 'select varchar_number(emp_id,emp_name,salary) \cb4 \uc0\u8232 \cb2 from employee where emp_id=7'\cb4 \uc0\u8232 \cb2 bulk collect into ret;\cb4 \uc0\u8232 \cb2 return ret;\cb4 \uc0\u8232 \cb2 end;\cb4 \uc0\u8232 \cb2 set serveroutput on size 10000\cb4 \uc0\u8232 \cb2 declare\cb4 \uc0\u8232 \cb2 x t_varchar_number;\cb4 \uc0\u8232 \cb2 begin\cb4 \uc0\u8232 \cb2 x:= exam;\cb4 \uc0\u8232 \cb2 for r in (select * from table(cast(x as t_varchar_number))) loop\cb4 \uc0\u8232 \cb2 dbms_output.put_line(r.emp_id || '' ||r.emp_name || '' || r.salary);\cb4 \uc0\u8232 \cb2 end loop;\cb4 \uc0\u8232 \cb2 end;\
+\cb4 \uc0\u8232 \cb2 9.\
+\pard\pardeftab720\partightenfactor0
+\cf0 \cb2 Create or replace type nine as object (first_name varchar(20),last_name varchar(20),salary number); \uc0\u1089 \u1085 \u1072 \u1095 \u1072 \u1083 \u1086  \u1101 \u1090 \u1086 \u1090  \u1090 \u1080 \u1087 \
+Create or replace type n_nine as table of n_nine; \uc0\u1072  \u1087 \u1086 \u1090 \u1086 \u1084  \u1101 \u1090 \u1086 \u1090  \u1090 \u1080 \u1087 \
+\cb4 \uc0\u8232 \cb2 create or replace function exam_nine\cb4 \uc0\u8232 \cb2 return n_nine as ret n_nine;\cb4 \uc0\u8232 \cb2 begin\cb4 \uc0\u8232 \cb2 execute immediate 'select nine(first_name,last_name,salary) \cb4 \uc0\u8232 \cb2 from employees where dep_id in (select dep_id from department)'\cb4 \uc0\u8232 \cb2 bulk collect into ret;\cb4 \uc0\u8232 \cb2 return ret;\cb4 \uc0\u8232 \cb2 end;\cb4 \uc0\u8232 \cb2 set serveroutput on size 10000\cb4 \uc0\u8232 \cb2 declare\cb4 \uc0\u8232 \cb2 x n_nine;\cb4 \uc0\u8232 \cb2 begin\cb4 \uc0\u8232 \cb2 x:= exam_nine;\cb4 \uc0\u8232 \cb2 for r in (select * from table(cast(x as n_nine))) loop\cb4 \uc0\u8232 \cb2 dbms_output.put_line(r.first_name || '' ||r.last_name || '' || r.salary);\cb4 \uc0\u8232 \cb2 end loop;\cb4 \uc0\u8232 \cb2 end;\
+\pard\pardeftab720\li80\fi-80\ri460\sa80\partightenfactor0
+\cf0 \
+10.\
+create table cities(\
+id number not null primary key,\
+name varchar(20));\
+\
+insert into cities values(4, 'Shymkent');\
+\
+\
+create or replace procedure add_user(\
+u_name cities.name%type,\
+u_res number)\
+AUTHID CURRENT_USER\
+is\
+city_name varchar(20);\
+doesexist int;\
+lastid number;\
+begin \
+    select name into city_name from cities where id = u_res;\
+    select count(*) into doesexist from tab where tname = city_name;    \
+    dbms_output.put_line(doesexist);\
+    if(doesexist = 0) then \
+        execute immediate 'create table '|| city_name ||'(id number primary key, name varchar(20))';\
+        execute immediate 'insert into ' || city_name ||' values(1, :2)' using  u_name;\
+    else\
+        execute immediate 'select count(*) from ' || city_name into lastid;\
+        lastid := lastid + 1;\
+        execute immediate 'insert into '|| city_name ||' values(:2, :3)' using lastid, u_name;\
+    end if;\
+end;\
+\
+begin \
+add_user('Mil', 3);\
+end;\
+\cb4 \uc0\u8232 \cb2 11.\cb4 \uc0\u8232 \cb2 DECLARE\cb4 \uc0\u8232 \cb2 sql_stmt VARCHAR2(200);\cb4 \uc0\u8232 \cb2 first_name varchar(20) :='Ken';\cb4 \uc0\u8232 \cb2 last_name varchar(20) :='Kennedy';\cb4 \uc0\u8232 \cb2 salary number :=100;\cb4 \uc0\u8232 \cb2 department_id number :=1;\cb4 \uc0\u8232 \cb2 BEGIN\cb4 \uc0\u8232 \cb2 EXECUTE IMMEDIATE 'CREATE TABLE emp (first_name varchar(20),last_name varchar(20),salary number,department_id number)';\cb4 \uc0\u8232 \cb2 sql_stmt := 'INSERT INTO emp VALUES (:1, :2, :3,:4)';\cb4 \uc0\u8232 \cb2 EXECUTE IMMEDIATE sql_stmt USING first_name,last_name ,salary ,department_id;\cb4 \uc0\u8232 \cb2 END;\
+\cb4 \uc0\u8232 \cb2 12.\cb4 \uc0\u8232 \cb2 DECLARE\cb4 \uc0\u8232 \cb2 CURSOR c1 IS\cb4 \uc0\u8232 \cb2 SELECT first_name,last_name,salary\cb4 \uc0\u8232 \cb2 FROM employees where salary>300 and salary<1000;\cb4 \uc0\u8232 \u8232 \cb2 BEGIN\cb4 \uc0\u8232 \cb2 FOR dep IN c1 \cb4 \uc0\u8232 \cb2 LOOP\cb4 \uc0\u8232 \cb2 DBMS_OUTPUT.PUT_LINE('First name:' || dep.first_name || ' ' ||'Last name: ' || dep.last_name || ' '||\cb4 \uc0\u8232 \cb2 'Salary: '||dep.salary);\cb4 \uc0\u8232 \cb2 END LOOP;\cb4 \uc0\u8232 \cb2 END;}
